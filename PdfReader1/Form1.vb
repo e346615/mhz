@@ -12,6 +12,7 @@ Imports System.Text
 Imports Tesseract
 Imports System.Xml
 Imports VBScript_RegExp_55
+Imports journeyofcode.Images.OnenoteOCR
 
 Public Class MainForm
 
@@ -53,13 +54,31 @@ Public Class MainForm
 
             ' get the image
             img = doc.SaveAsImage(pagenumber)
-            Using pix = PixConverter.ToPix(img)
-                Using pp = te.Process(pix)
-                    buffer.AppendLine("   <OCR text>")
-                    buffer.AppendLine(pp.GetText())
-                    buffer.AppendLine("<confidence: " & 100 * pp.GetMeanConfidence() & "%>")
+
+            Try
+                Using ocrEngine = New OnenoteOcrEngine()
+                    Using img
+                        Dim text = ocrEngine.Recognize(img)
+                        If text Is Nothing Then
+                            text = "nothing recognized"
+                        End If
+                        buffer.AppendLine("   <OCR text>")
+                        buffer.AppendLine(text)
+                    End Using
                 End Using
-            End Using
+            Catch ex As OcrException
+                MsgBox("OcrException:" & vbLf & ex.ToString)
+            Catch ex As Exception
+                MsgBox("General Exception:" & vbLf & ex.ToString)
+            End Try
+
+            'Using pix = PixConverter.ToPix(img)
+            '    Using pp = te.Process(pix)
+            '        buffer.AppendLine("   <OCR text>")
+            '        buffer.AppendLine(pp.GetText())
+            '        buffer.AppendLine("<confidence: " & 100 * pp.GetMeanConfidence() & "%>")
+            '    End Using
+            'End Using
             pagenumber = pagenumber + 1
         Next page
         doc.Close()
