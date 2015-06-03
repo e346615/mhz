@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<windstorm>
+  <pattern>DP 04 37 03 95</pattern>
+  <pattern>WINDSTORM OR HAIL EXCLUSION</pattern>
+  <pattern>we do not insure for loss caused directly or indirectly from windstorm or hail</pattern>
+  <pattern>Request to Exclude .*storm and h.*l</pattern>
+</windstorm>
